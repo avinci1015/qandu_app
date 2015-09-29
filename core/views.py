@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.views.generic import TemplateView,CreateView
 from django.core.urlresolvers import reverse_lazy
 from .models import *
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, UpdateView
+
 
 # Create your views here.
 class Home(TemplateView):
@@ -22,5 +23,10 @@ class QuestionListView(ListView):
     model = Question
     template_name = "question/question_list.html"
 class QuestionDetailView(DetailView):
-    mondel = Question
+    model = Question
     template_name = 'question/question_detail.html'
+class QuestionUpdateView(UpdateView):
+    model = Question
+    template_name = "question/question_form.html"
+    fields = ['title', 'description']
+    
