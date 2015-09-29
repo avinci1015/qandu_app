@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView,CreateView
 from django.core.urlresolvers import reverse_lazy
 from .models import *
-from django.views.generic import ListView, DetailView, UpdateView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 
 
 # Create your views here.
@@ -29,4 +29,8 @@ class QuestionUpdateView(UpdateView):
     model = Question
     template_name = "question/question_form.html"
     fields = ['title', 'description']
+class QuestionDeleteView(DeleteView):
+    model = Question
+    template_name = 'question/question_confirm_delete.html'
+    success_url = reverse_lazy ('question_list')
     
