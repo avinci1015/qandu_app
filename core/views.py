@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.views.generic import TemplateView,CreateView
 from django.core.urlresolvers import reverse_lazy
 from .models import *
+from django.shortcuts import redirect
+from django.views.generic import FormView
+from .forms import *
 from django.core.exceptions import PermissionDenied
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 
@@ -101,3 +104,18 @@ class AnswerDeleteView(DeleteView):
             if object.user != self.request.user:
                 raise PermissionDenied()
             return object
+
+class VoteFormView(FormView):
+    form_class = VoteForm
+
+    def form_valid(self, form):
+        user = self.request.user
+        question = Question.objects.get(pk=form.data["question"])
+        prev_votes = Vote.objects.filter(user=user, question=question)
+        has_voted = (prev_votes.count()>0)
+        if not has_voted:
+            Vote.objects.create(user=user, question=question)
+        else:
+            prev_votes[0].delete()
+        return redirect('question_list')
+
